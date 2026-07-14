@@ -2,12 +2,6 @@
 
 A GPU-accelerated browser application for compositing looping videos using luminance masks.
 
-Created by **Frosty**.
-
-GitHub: [https://github.com/enafrosty](https://github.com/enafrosty)
-
-Contact: [iyad@heyfrosty.space](mailto:iyad@heyfrosty.space)
-
 ---
 
 ## Overview
@@ -109,6 +103,7 @@ The renderer is designed so it can later support:
 ## Credits
 
 Designed and developed by **Frosty**.
+Contact: [iyad@heyfrosty.space](mailto:iyad@heyfrosty.space)
 
 ## License
 
