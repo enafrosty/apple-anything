@@ -27,17 +27,16 @@ export class ExportPipeline {
     state.setExportStatusText('Loading FFmpeg core components...')
     this.ffmpeg = new FFmpeg()
 
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd'
     try {
-      await this.ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      })
+      const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript')
+      const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+      await this.ffmpeg.load({ coreURL, wasmURL })
       this.isLoaded = true
       state.setExportStatusText('FFmpeg loaded successfully.')
     } catch (err) {
       console.error('Failed to load FFmpeg.wasm:', err)
-      state.setExportStatusText('Failed to load FFmpeg.wasm. Check internet connection or cross-origin headers.')
+      state.setExportStatusText('Failed to load FFmpeg. Check internet connection or cross-origin headers (COOP/COEP).')
       throw err
     }
   }
@@ -102,18 +101,36 @@ export class ExportPipeline {
       whiteTex.setSource(whiteSrc)
       blackTex.setSource(blackSrc)
 
+      // Append video elements to DOM to ensure decoding/seeking works in all browsers
+      const appendVideoToDOM = (vid: HTMLVideoElement) => {
+        vid.style.position = 'fixed'
+        vid.style.width = '1px'
+        vid.style.height = '1px'
+        vid.style.opacity = '0'
+        vid.style.pointerEvents = 'none'
+        document.body.appendChild(vid)
+      }
+      appendVideoToDOM(maskTex.video)
+      appendVideoToDOM(whiteTex.video)
+      appendVideoToDOM(blackTex.video)
+
       state.setExportStatusText('Preparing video tracks...')
 
-      // Helper function to wait for loaded video metadata
+      // Helper function to wait for loaded video metadata with safety timeout
       const waitForMetadata = (vidTex: any) => {
         if (!vidTex.video.src) return Promise.resolve()
-        if (vidTex.isLoaded) return Promise.resolve()
+        if (vidTex.isLoaded || vidTex.video.readyState >= 1) return Promise.resolve()
         return new Promise<void>((resolve) => {
+          let resolved = false
           const handler = () => {
+            if (resolved) return
+            resolved = true
             vidTex.video.removeEventListener('loadedmetadata', handler)
             resolve()
           }
           vidTex.video.addEventListener('loadedmetadata', handler)
+          // Fallback timeout to prevent permanent hang
+          setTimeout(handler, 2000)
         })
       }
 
@@ -130,16 +147,25 @@ export class ExportPipeline {
 
       state.setExportStatusText(`Rendering ${totalFrames} frames...`)
 
-      // Seek helpers
-      const seekToTime = async (video: HTMLVideoElement, time: number) => {
-        if (!video.src) return
-        video.currentTime = time
+      // Seek helpers with safety timeout and close checks to avoid browser drops
+      const seekToTime = (video: HTMLVideoElement, time: number) => {
+        if (!video.src || !video.duration) return Promise.resolve()
+        if (Math.abs(video.currentTime - time) < 0.01) {
+          return Promise.resolve()
+        }
+
         return new Promise<void>((resolve) => {
+          let resolved = false
           const onSeeked = () => {
+            if (resolved) return
+            resolved = true
             video.removeEventListener('seeked', onSeeked)
             resolve()
           }
           video.addEventListener('seeked', onSeeked)
+          video.currentTime = time
+          // Fallback timeout to prevent hanging on rapid frame seeking
+          setTimeout(onSeeked, 500)
         })
       }
 
@@ -212,7 +238,7 @@ export class ExportPipeline {
       const downloadUrl = URL.createObjectURL(videoBlob)
       const a = document.createElement('a')
       a.href = downloadUrl
-      a.download = `Video_Mask_Composer_Export_${Date.now()}.${state.exportFormat}`
+      a.download = `Apple_Anything_Export_${Date.now()}.${state.exportFormat}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -233,12 +259,33 @@ export class ExportPipeline {
       exportTextureManager.dispose()
       exportMaskPass.dispose()
 
+      // Remove video elements from DOM
+      const removeVideoFromDOM = (vid: HTMLVideoElement) => {
+        try {
+          if (vid.parentNode === document.body) {
+            document.body.removeChild(vid)
+          }
+        } catch {}
+      }
+      removeVideoFromDOM(maskTex.video)
+      removeVideoFromDOM(whiteTex.video)
+      removeVideoFromDOM(blackTex.video)
+
       state.setExportProgress(100)
       state.setExportStatusText('Export complete! File downloaded.')
     } catch (err: any) {
       console.error(err)
       state.setExportStatusText(`Export failed: ${err.message || err}`)
     } finally {
+      // Ensure video elements are cleaned up from DOM in case of failures
+      try {
+        const vids = document.querySelectorAll('video')
+        vids.forEach(v => {
+          if (v.parentNode === document.body) {
+            document.body.removeChild(v)
+          }
+        })
+      } catch {}
       state.setExporting(false)
     }
   }

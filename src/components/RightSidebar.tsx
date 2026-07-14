@@ -1,5 +1,5 @@
 /*
- * Video Mask Composer
+ * Apple Anything
  * Copyright (c) 2026 Frosty
  *
  * Author: Iyad Nouasra (Frosty)
@@ -31,8 +31,8 @@ export const RightSidebar: React.FC<{
     return (
       <div className="space-y-1">
         <div className="flex justify-between text-xs">
-          <span className="text-gray-400 font-medium">{label}</span>
-          <span className="text-gray-200 font-semibold">
+          <span className="text-neutral-400 font-medium">{label}</span>
+          <span className="text-neutral-200 font-semibold">
             {val.toFixed(step >= 1 ? 0 : 2)}
             {suffix}
           </span>
@@ -44,24 +44,24 @@ export const RightSidebar: React.FC<{
           step={step}
           value={val}
           onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-rose-500"
+          className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-white"
         />
       </div>
     )
   }
 
   return (
-    <aside className="w-80 h-full bg-gray-950 border-l border-gray-900 flex flex-col select-none">
+    <aside className="w-80 h-full bg-black border-l border-neutral-800 flex flex-col select-none">
       {/* Tabs */}
-      <div className="flex border-b border-gray-900">
+      <div className="flex border-b border-neutral-800">
         {(['adjust', 'transform', 'effects', 'export'] as const).map((sec) => (
           <button
             key={sec}
             onClick={() => setActiveSection(sec)}
             className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
               activeSection === sec
-                ? 'text-rose-500 border-b-2 border-rose-500 bg-gray-900/10'
-                : 'text-gray-500 hover:text-gray-300'
+                ? 'text-white border-b-2 border-white bg-neutral-900/20'
+                : 'text-neutral-500 hover:text-neutral-300'
             }`}
           >
             {sec}
@@ -73,15 +73,15 @@ export const RightSidebar: React.FC<{
       <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {activeSection === 'adjust' && (
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
               <Sliders className="w-3.5 h-3.5" /> Mask Adjustments
             </h3>
 
             {renderSlider('Luminance Threshold', 0, 255, store.threshold, store.setThreshold)}
             {renderSlider('Mask Feather', 0, 100, store.feather, store.setFeather)}
 
-            <div className="pt-3 border-t border-gray-900 space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">Video Opacities</h3>
+            <div className="pt-3 border-t border-neutral-800 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500">Video Opacities</h3>
               {renderSlider('White Layer Opacity', 0, 1, store.whiteOpacity, store.setWhiteOpacity, 0.01, 'x')}
               {renderSlider('Black Layer Opacity', 0, 1, store.blackOpacity, store.setBlackOpacity, 0.01, 'x')}
             </div>
@@ -90,7 +90,7 @@ export const RightSidebar: React.FC<{
 
         {activeSection === 'transform' && (
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
               <Maximize className="w-3.5 h-3.5" /> Layer UV Transforms
             </h3>
 
@@ -99,14 +99,34 @@ export const RightSidebar: React.FC<{
             {renderSlider('Offset Y', -1, 1, store.offsetY, store.setOffsetY, 0.01)}
             {renderSlider('Rotation', 0, 360, store.rotation, store.setRotation, 1, '°')}
 
+            {/* Tiling / Duplication */}
+            <div className="space-y-1.5 pt-2 border-t border-neutral-800">
+              <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">Duplicate / Tile</span>
+              <div className="grid grid-cols-4 gap-1">
+                {([1, 2, 4, 8] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => store.setWhiteTiling(t)}
+                    className={`py-2 text-xs font-semibold rounded-lg border transition-colors ${
+                      store.whiteTiling === t
+                        ? 'border-white bg-white/10 text-white font-bold'
+                        : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white'
+                    }`}
+                  >
+                    {t}x{t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Mirror and Flip */}
             <div className="grid grid-cols-2 gap-2 pt-2">
               <button
                 onClick={() => store.setMirror(!store.mirror)}
                 className={`py-2 text-xs font-semibold rounded-lg border transition-all ${
                   store.mirror
-                    ? 'border-rose-500 bg-rose-500/10 text-rose-400'
-                    : 'border-gray-800 bg-gray-900 text-gray-400 hover:text-white'
+                    ? 'border-white bg-white/10 text-white'
+                    : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white'
                 }`}
               >
                 Mirror Horizontal
@@ -115,8 +135,8 @@ export const RightSidebar: React.FC<{
                 onClick={() => store.setFlip(!store.flip)}
                 className={`py-2 text-xs font-semibold rounded-lg border transition-all ${
                   store.flip
-                    ? 'border-rose-500 bg-rose-500/10 text-rose-400'
-                    : 'border-gray-800 bg-gray-900 text-gray-400 hover:text-white'
+                    ? 'border-white bg-white/10 text-white'
+                    : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white'
                 }`}
               >
                 Flip Vertical
@@ -129,7 +149,7 @@ export const RightSidebar: React.FC<{
           <div className="space-y-5">
             {/* Color adjustments */}
             <div className="space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
                 <Palette className="w-3.5 h-3.5" /> Color Grading
               </h3>
               {renderSlider('Brightness', -1, 1, store.effects.brightness, (v) => store.updateEffect('brightness', v), 0.02)}
@@ -139,8 +159,8 @@ export const RightSidebar: React.FC<{
             </div>
 
             {/* Visual filters */}
-            <div className="pt-3 border-t border-gray-900 space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+            <div className="pt-3 border-t border-neutral-800 space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" /> Creative Filters
               </h3>
               {renderSlider('Edge Glow', 0, 1, store.effects.edgeGlow, (v) => store.updateEffect('edgeGlow', v), 0.02)}
@@ -152,7 +172,7 @@ export const RightSidebar: React.FC<{
 
             <button
               onClick={() => store.resetEffects()}
-              className="w-full py-2 bg-gray-900 hover:bg-gray-800 border border-gray-850 text-xs font-bold text-gray-400 hover:text-white rounded-lg transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-bold text-neutral-400 hover:text-white rounded-lg transition-colors flex items-center justify-center gap-1.5"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Reset Filters
             </button>
@@ -161,13 +181,13 @@ export const RightSidebar: React.FC<{
 
         {activeSection === 'export' && (
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
               <Download className="w-3.5 h-3.5" /> Export Configuration
             </h3>
 
             {/* Quality Select */}
             <div className="space-y-1.5">
-              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Resolution</span>
+              <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">Resolution</span>
               <div className="grid grid-cols-2 gap-2">
                 {(['720p', '1080p', '1440p', '4k'] as const).map((q) => (
                   <button
@@ -175,8 +195,8 @@ export const RightSidebar: React.FC<{
                     onClick={() => store.setExportQuality(q)}
                     className={`py-2 text-xs font-semibold rounded-lg border transition-colors ${
                       store.exportQuality === q
-                        ? 'border-rose-500 bg-rose-500/10 text-rose-400 font-bold'
-                        : 'border-gray-800 bg-gray-900 text-gray-400 hover:text-white'
+                        ? 'border-white bg-white/10 text-white font-bold'
+                        : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white'
                     }`}
                   >
                     {q.toUpperCase()}
@@ -187,7 +207,7 @@ export const RightSidebar: React.FC<{
 
             {/* Format Select */}
             <div className="space-y-1.5 pt-2">
-              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Output Format</span>
+              <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">Output Format</span>
               <div className="grid grid-cols-2 gap-2">
                 {(['webm', 'mp4'] as const).map((fmt) => (
                   <button
@@ -195,8 +215,8 @@ export const RightSidebar: React.FC<{
                     onClick={() => store.setExportFormat(fmt)}
                     className={`py-2 text-xs font-semibold rounded-lg border transition-colors ${
                       store.exportFormat === fmt
-                        ? 'border-rose-500 bg-rose-500/10 text-rose-400 font-bold'
-                        : 'border-gray-800 bg-gray-900 text-gray-400 hover:text-white'
+                        ? 'border-white bg-white/10 text-white font-bold'
+                        : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white'
                     }`}
                   >
                     {fmt.toUpperCase()}
@@ -210,7 +230,7 @@ export const RightSidebar: React.FC<{
               <button
                 onClick={onExport}
                 disabled={store.isExporting || (!store.maskVideo.isLoaded && !store.whiteVideo.isLoaded && !store.blackVideo.isLoaded)}
-                className="w-full py-3 bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xl shadow-rose-500/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {store.isExporting ? (
                   <>

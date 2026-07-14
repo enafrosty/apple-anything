@@ -1,5 +1,5 @@
 /*
- * Video Mask Composer
+ * Apple Anything
  * Copyright (c) 2026 Frosty
  *
  * Author: Iyad Nouasra (Frosty)
@@ -10,7 +10,7 @@
  */
 
 import React, { useState } from 'react'
-import { Video, HelpCircle, Keyboard } from 'lucide-react'
+import { HelpCircle, Keyboard } from 'lucide-react'
 import { useStore } from '../state/store'
 
 export const Header: React.FC = () => {
@@ -18,16 +18,11 @@ export const Header: React.FC = () => {
   const [showShortcuts, setShowShortcuts] = useState(false)
 
   return (
-    <header className="h-14 bg-gray-950 border-b border-gray-900 px-6 flex items-center justify-between select-none">
-      {/* Brand Logo */}
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-gradient-to-tr from-rose-500 to-purple-600 text-white shadow-lg shadow-rose-500/10">
-          <Video className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="font-extrabold text-sm tracking-tight text-white">Video Mask Composer</span>
-          <span className="text-[10px] ml-2 text-gray-500 font-semibold uppercase tracking-wider">Editor</span>
-        </div>
+    <header className="h-14 bg-black border-b border-neutral-800 px-6 flex items-center justify-between select-none">
+      {/* Brand — text only, no logo */}
+      <div className="flex items-center gap-2">
+        <span className="font-extrabold text-sm tracking-tight text-white">Apple Anything</span>
+        <span className="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">Editor</span>
       </div>
 
       {/* Buttons */}
@@ -36,8 +31,8 @@ export const Header: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setShowShortcuts(!showShortcuts)}
-            className={`p-2 rounded-lg border text-gray-400 hover:text-white transition-colors ${
-              showShortcuts ? 'bg-gray-900 border-gray-800 text-white' : 'border-transparent hover:bg-gray-900'
+            className={`p-2 rounded-lg border text-neutral-400 hover:text-white transition-colors ${
+              showShortcuts ? 'bg-neutral-900 border-neutral-700 text-white' : 'border-transparent hover:bg-neutral-900'
             }`}
             title="Keyboard Shortcuts"
           >
@@ -45,24 +40,24 @@ export const Header: React.FC = () => {
           </button>
 
           {showShortcuts && (
-            <div className="absolute right-0 mt-2 w-64 bg-gray-900 border border-gray-850 shadow-2xl rounded-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute right-0 mt-2 w-64 bg-neutral-900 border border-neutral-700 shadow-2xl rounded-xl p-4 z-50">
               <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">Shortcuts</h4>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Play / Pause</span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-950 border border-gray-800 rounded font-mono text-[10px] text-gray-300">Space</kbd>
+                  <span className="text-neutral-400">Play / Pause</span>
+                  <kbd className="px-1.5 py-0.5 bg-black border border-neutral-700 rounded font-mono text-[10px] text-neutral-300">Space</kbd>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Seek Frame</span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-950 border border-gray-800 rounded font-mono text-[10px] text-gray-300">Arrow Keys</kbd>
+                  <span className="text-neutral-400">Seek Frame</span>
+                  <kbd className="px-1.5 py-0.5 bg-black border border-neutral-700 rounded font-mono text-[10px] text-neutral-300">Arrow Keys</kbd>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Export Output</span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-950 border border-gray-800 rounded font-mono text-[10px] text-gray-300">Ctrl + E</kbd>
+                  <span className="text-neutral-400">Export Output</span>
+                  <kbd className="px-1.5 py-0.5 bg-black border border-neutral-700 rounded font-mono text-[10px] text-neutral-300">Ctrl + E</kbd>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Clear Active Video</span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-950 border border-gray-800 rounded font-mono text-[10px] text-gray-300">Delete</kbd>
+                  <span className="text-neutral-400">Clear Active Video</span>
+                  <kbd className="px-1.5 py-0.5 bg-black border border-neutral-700 rounded font-mono text-[10px] text-neutral-300">Delete</kbd>
                 </div>
               </div>
             </div>
@@ -72,8 +67,8 @@ export const Header: React.FC = () => {
         {/* About Dialog Button */}
         <button
           onClick={() => setAboutOpen(true)}
-          className="p-2 rounded-lg border border-transparent hover:bg-gray-900 text-gray-400 hover:text-white transition-colors"
-          title="About Video Mask Composer"
+          className="p-2 rounded-lg border border-transparent hover:bg-neutral-900 text-neutral-400 hover:text-white transition-colors"
+          title="About Apple Anything"
         >
           <HelpCircle className="w-4.5 h-4.5" />
         </button>

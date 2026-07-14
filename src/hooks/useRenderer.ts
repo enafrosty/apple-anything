@@ -56,7 +56,7 @@ export function useRenderer(canvasRef: React.RefObject<HTMLCanvasElement | null>
   // ---------- sync playback state ----------
   useEffect(() => {
     rendererRef.current?.updatePlayback(store)
-  }, [store.isPlaying, store.playbackSpeed, store.isMuted, store.isLooping])
+  }, [store.isPlaying, store.playbackSpeed, store.isMuted, store.isLooping, store.whiteMuted, store.blackMuted])
 
   // ---------- keep active state pointer ----------
   useEffect(() => {

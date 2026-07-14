@@ -64,6 +64,11 @@ export interface CompositorState {
   exportQuality: '720p' | '1080p' | '1440p' | '4k'
   exportFormat: 'webm' | 'mp4'
 
+  // Individual mute & transforms
+  whiteMuted: boolean
+  blackMuted: boolean
+  whiteTiling: number // Tiling replication factor: 1, 2, 4, 8
+
   // Selection
   selectedTrack: 'mask' | 'white' | 'black' | null
 
@@ -102,6 +107,9 @@ export interface CompositorState {
   setLoopMode: (mode: 'loop' | 'bounce' | 'once') => void
   setExportQuality: (quality: '720p' | '1080p' | '1440p' | '4k') => void
   setExportFormat: (format: 'webm' | 'mp4') => void
+  setWhiteMuted: (muted: boolean) => void
+  setBlackMuted: (muted: boolean) => void
+  setWhiteTiling: (tiling: number) => void
   updateEffect: (effectName: keyof CompositingEffects, value: number) => void
   resetEffects: () => void
   setAboutOpen: (open: boolean) => void
@@ -160,6 +168,10 @@ export const useStore = create<CompositorState>((set, get) => ({
   loopMode: 'loop',
   exportQuality: '1080p',
   exportFormat: 'mp4',
+
+  whiteMuted: true,
+  blackMuted: true,
+  whiteTiling: 1,
 
   selectedTrack: null,
 
@@ -258,6 +270,9 @@ export const useStore = create<CompositorState>((set, get) => ({
   setLoopMode: (loopMode) => set({ loopMode }),
   setExportQuality: (exportQuality) => set({ exportQuality }),
   setExportFormat: (exportFormat) => set({ exportFormat }),
+  setWhiteMuted: (whiteMuted) => set({ whiteMuted }),
+  setBlackMuted: (blackMuted) => set({ blackMuted }),
+  setWhiteTiling: (whiteTiling) => set({ whiteTiling }),
 
   updateEffect: (effectName, value) =>
     set((state) => ({
@@ -308,6 +323,9 @@ export const useStore = create<CompositorState>((set, get) => ({
       loopMode: 'loop',
       exportQuality: '1080p',
       exportFormat: 'mp4',
+      whiteMuted: true,
+      blackMuted: true,
+      whiteTiling: 1,
       selectedTrack: null,
       effects: initialEffects(),
       aboutOpen: false,

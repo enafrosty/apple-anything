@@ -1,12 +1,18 @@
-# Video Mask Composer
+# Apple Anything
 
 A GPU-accelerated browser application for compositing looping videos using luminance masks.
+
+Created by **Frosty**.
+
+GitHub: [https://github.com/enafrosty](https://github.com/enafrosty)
+
+Contact: [iyad@heyfrosty.space](mailto:iyad@heyfrosty.space)
 
 ---
 
 ## Overview
 
-Video Mask Composer lets you overlay two looping videos using a black-and-white mask video as a luminance key. White regions of the mask reveal one video, black regions reveal another — all composited in real time on the GPU using WebGL shaders.
+Apple Anything lets you overlay two looping videos using a black-and-white mask video as a luminance key. White regions of the mask reveal one video, black regions reveal another — all composited in real time on the GPU using WebGL shaders.
 
 ### Key Features
 
@@ -103,7 +109,6 @@ The renderer is designed so it can later support:
 ## Credits
 
 Designed and developed by **Frosty**.
-Contact: [iyad@heyfrosty.space](mailto:iyad@heyfrosty.space)
 
 ## License
 

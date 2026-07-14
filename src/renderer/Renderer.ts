@@ -104,6 +104,9 @@ export class Renderer {
     if (black && black.video.src !== (state.blackVideo.url || '')) {
       black.setSource(state.blackVideo.url)
     }
+
+    // Immediately sync playback for newly loaded sources
+    this.updatePlayback(state)
   }
 
   updatePlayback(state: CompositorState) {
@@ -123,8 +126,21 @@ export class Renderer {
 
       // Sync settings
       tex.setSpeed(state.playbackSpeed)
-      tex.setMute(state.isMuted)
-      tex.setLoop(state.isLooping)
+      // White/black fill videos always loop; only mask respects isLooping
+      if (id === 'mask') {
+        tex.setLoop(state.isLooping)
+      } else {
+        tex.setLoop(true)
+      }
+
+      // Per-track mute: master mute overrides individual settings
+      let muted = state.isMuted
+      if (!muted) {
+        if (id === 'mask') muted = true // mask audio always muted
+        else if (id === 'white') muted = state.whiteMuted
+        else if (id === 'black') muted = state.blackMuted
+      }
+      tex.setMute(muted)
     })
   }
 
@@ -158,10 +174,13 @@ export class Renderer {
     // Render mask pass
     this.maskPass.render(this.textureManager, state)
 
-    // Update FPS and Frame counter
+    // Update FPS counter (always ticks for diagnostics)
     const clockInfo = this.frameClock.tick()
     state.setFps(clockInfo.fps)
-    state.setFrameNumber(clockInfo.frame)
+
+    // Frame number is derived from video time, not render ticks
+    const currentFrame = Math.floor(state.globalTime * 30)
+    state.setFrameNumber(currentFrame)
   }
 
   dispose() {

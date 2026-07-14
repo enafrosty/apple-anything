@@ -127,6 +127,7 @@ export class MaskPass {
     this.shaderManager.setUniform1f('uWhiteRotation', rotationRad)
     this.shaderManager.setUniform1b('uWhiteMirror', state.mirror)
     this.shaderManager.setUniform1b('uWhiteFlip', state.flip)
+    this.shaderManager.setUniform1f('uWhiteTiling', state.whiteTiling)
 
     // Set effects uniforms
     this.shaderManager.setUniform1f('uEdgeGlow', state.effects.edgeGlow)

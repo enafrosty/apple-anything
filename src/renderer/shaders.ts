@@ -64,6 +64,7 @@ export const FRAGMENT_SHADER_SOURCE = `
   uniform float uWhiteRotation;        // radians
   uniform bool  uWhiteMirror;
   uniform bool  uWhiteFlip;
+  uniform float uWhiteTiling;          // tiling multiplier: 1, 2, 4, 8
 
   // ── FX parameters ──
   uniform float uEdgeGlow;             // 0.0 – 1.0
@@ -153,22 +154,23 @@ export const FRAGMENT_SHADER_SOURCE = `
     float hi    = clamp(uThreshold + halfF, 0.0, 1.0);
     float alpha = (hi - lo > 0.0001) ? smoothstep(lo, hi, lum) : step(uThreshold, lum);
 
-    // 2. White layer (with transforms)
+    // 2. White layer (with transforms + tiling)
     vec2 wUV = transformUV(uv, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip);
+    vec2 tiledWUV = fract(wUV * uWhiteTiling);
     vec4 whiteColor;
     if (uHasWhite) {
       if (uChromaticAberration > 0.0) {
-        whiteColor.r = texture2D(uWhiteTex, transformUV(uv + rOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip)).r;
-        whiteColor.g = texture2D(uWhiteTex, transformUV(uv + gOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip)).g;
-        whiteColor.b = texture2D(uWhiteTex, transformUV(uv + bOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip)).b;
+        whiteColor.r = texture2D(uWhiteTex, fract(transformUV(uv + rOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip) * uWhiteTiling)).r;
+        whiteColor.g = texture2D(uWhiteTex, fract(transformUV(uv + gOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip) * uWhiteTiling)).g;
+        whiteColor.b = texture2D(uWhiteTex, fract(transformUV(uv + bOff, uWhiteOffset, uWhiteScale, uWhiteRotation, uWhiteMirror, uWhiteFlip) * uWhiteTiling)).b;
         whiteColor.a = 1.0;
       } else if (uBlur > 0.0) {
-        whiteColor = blurTexture(uWhiteTex, wUV, uBlur, ts);
+        whiteColor = blurTexture(uWhiteTex, tiledWUV, uBlur, ts);
       } else {
-        whiteColor = texture2D(uWhiteTex, wUV);
+        whiteColor = texture2D(uWhiteTex, tiledWUV);
       }
     } else {
-      whiteColor = vec4(wUV.x, 0.5 + 0.5 * sin(wUV.y * 6.28), 1.0 - wUV.x, 1.0);
+      whiteColor = vec4(tiledWUV.x, 0.5 + 0.5 * sin(tiledWUV.y * 6.28), 1.0 - tiledWUV.x, 1.0);
     }
 
     // 3. Black layer

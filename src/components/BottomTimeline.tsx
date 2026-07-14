@@ -1,5 +1,5 @@
 /*
- * Video Mask Composer
+ * Apple Anything
  * Copyright (c) 2026 Frosty
  *
  * Author: Iyad Nouasra (Frosty)
@@ -35,10 +35,10 @@ export const BottomTimeline: React.FC<BottomTimelineProps> = ({ onSeek }) => {
   }
 
   return (
-    <div className="h-20 bg-gray-950 border-t border-gray-900 px-6 py-3 flex flex-col justify-between select-none">
+    <div className="h-20 bg-black border-t border-neutral-800 px-6 py-3 flex flex-col justify-between select-none">
       {/* Scrubber slider */}
       <div className="flex items-center gap-3 w-full group">
-        <span className="text-[10px] font-mono text-gray-500 w-16">
+        <span className="text-[10px] font-mono text-neutral-500 w-16">
           {formatTime(store.globalTime)}
         </span>
         <input
@@ -49,15 +49,15 @@ export const BottomTimeline: React.FC<BottomTimelineProps> = ({ onSeek }) => {
           value={store.globalTime}
           onChange={handleScrubberChange}
           disabled={!store.globalDuration}
-          className="flex-1 h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-rose-500 disabled:opacity-40 disabled:cursor-not-allowed group-hover:scale-y-110 transition-transform"
+          className="flex-1 h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-white disabled:opacity-40 disabled:cursor-not-allowed group-hover:scale-y-110 transition-transform"
         />
-        <span className="text-[10px] font-mono text-gray-500 w-16 text-right">
+        <span className="text-[10px] font-mono text-neutral-500 w-16 text-right">
           {formatTime(store.globalDuration)}
         </span>
       </div>
 
       {/* Info elements */}
-      <div className="flex items-center justify-between text-xs text-gray-400">
+      <div className="flex items-center justify-between text-xs text-neutral-400">
         <div className="flex items-center gap-4">
           <button
             onClick={() => store.setPlaying(!store.isPlaying)}
@@ -66,12 +66,12 @@ export const BottomTimeline: React.FC<BottomTimelineProps> = ({ onSeek }) => {
           >
             {store.isPlaying ? (
               <>
-                <Pause className="w-3.5 h-3.5 text-amber-500" />
+                <Pause className="w-3.5 h-3.5 text-white" />
                 <span>Pause (Space)</span>
               </>
             ) : (
               <>
-                <Play className="w-3.5 h-3.5 text-rose-500 fill-current" />
+                <Play className="w-3.5 h-3.5 text-white fill-current" />
                 <span>Play (Space)</span>
               </>
             )}
@@ -80,14 +80,14 @@ export const BottomTimeline: React.FC<BottomTimelineProps> = ({ onSeek }) => {
 
         {/* Diagnostic counters */}
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-1.5 text-gray-500">
+          <div className="flex items-center gap-1.5 text-neutral-500">
             <Video className="w-3.5 h-3.5" />
-            <span>Frame: <strong className="font-semibold text-gray-300">{store.frameNumber}</strong></span>
+            <span>Frame: <strong className="font-semibold text-neutral-300">{store.frameNumber}</strong></span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-gray-500">
+          <div className="flex items-center gap-1.5 text-neutral-500">
             <Cpu className="w-3.5 h-3.5" />
-            <span>FPS: <strong className={`font-semibold ${store.fps >= 55 ? 'text-emerald-400' : 'text-amber-400'}`}>{store.fps}</strong></span>
+            <span>FPS: <strong className={`font-semibold ${store.fps >= 55 ? 'text-white' : 'text-neutral-400'}`}>{store.fps}</strong></span>
           </div>
         </div>
       </div>
